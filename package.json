@@ -1,0 +1,9 @@
+{
+  "name": "devops-na-pratica-fase1",
+  "version": "1.0.0",
+  "description": "Fase 1 - Configuracao e Automacao Inicial (CI e IaC)",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --test"
+  }
+}
