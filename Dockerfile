@@ -1,5 +1,9 @@
 FROM node:22-alpine
 
+LABEL org.opencontainers.image.source="https://github.com/SCSAndre/devops-na-pratica-fase1"
+LABEL org.opencontainers.image.description="Aplicacao de monitoramento de saude de servidores - DevOps na Pratica"
+LABEL org.opencontainers.image.licenses="MIT"
+
 WORKDIR /app
 
 COPY package.json ./

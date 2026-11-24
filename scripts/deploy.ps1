@@ -19,8 +19,9 @@ if ($LocalBuild) {
 $existing = docker ps -a --format "{{.Names}}" | Where-Object { $_ -eq $ContainerName }
 if ($existing) {
     Write-Host "[DEPLOY] Preservando container anterior para rollback..."
-    docker rm -f $BackupName 2>$null | Out-Null
-    docker stop $ContainerName 2>$null | Out-Null
+    $oldBackup = docker ps -a --format "{{.Names}}" | Where-Object { $_ -eq $BackupName }
+    if ($oldBackup) { docker rm -f $BackupName | Out-Null }
+    docker stop $ContainerName | Out-Null
     docker rename $ContainerName $BackupName | Out-Null
 }
 
@@ -34,13 +35,20 @@ docker run -d `
     $Image | Out-Null
 
 Start-Sleep -Seconds 3
+$healthy = $false
 try {
     $response = Invoke-RestMethod -Uri "http://127.0.0.1:${Port}/health" -TimeoutSec 5
     Write-Host "[DEPLOY] Sucesso! Status da aplicacao: $($response.status)"
-    docker rm -f $BackupName 2>$null | Out-Null
+    $healthy = $true
 } catch {
-    Write-Error "[ERRO] Healthcheck falhou. Executando rollback..."
-    docker rm -f $ContainerName 2>$null | Out-Null
+    Write-Warning "[ERRO] Healthcheck falhou. Executando rollback..."
+}
+
+if ($healthy) {
+    $backup = docker ps -a --format "{{.Names}}" | Where-Object { $_ -eq $BackupName }
+    if ($backup) { docker rm -f $BackupName | Out-Null }
+} else {
+    docker rm -f $ContainerName | Out-Null
     $backup = docker ps -a --format "{{.Names}}" | Where-Object { $_ -eq $BackupName }
     if ($backup) {
         docker rename $BackupName $ContainerName | Out-Null
