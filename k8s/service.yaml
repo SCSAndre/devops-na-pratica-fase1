@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: monitor-saude-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: monitor-saude
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000

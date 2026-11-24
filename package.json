@@ -1,9 +1,10 @@
 {
   "name": "devops-na-pratica-fase1",
-  "version": "1.0.0",
-  "description": "Fase 1 - Configuracao e Automacao Inicial (CI e IaC)",
-  "main": "index.js",
+  "version": "2.0.0",
+  "description": "Projeto DevOps na Pratica - Fases 1 e 2 (CI/CD, IaC, Docker, Monitoramento e Seguranca)",
+  "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "test": "node --test"
   }
 }
